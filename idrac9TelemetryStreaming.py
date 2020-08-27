@@ -6,7 +6,7 @@
 #                                 /___/                                    /___/
 ####################################################################################
 #  Name:        idrac9TelemetrySTreaming.py
-#  Description: Script for pulling iDRAC9 sensor data via Redfish SSE 
+#  Description: Script for pulling iDRAC9 sensor data via Redfish SSE
 #               and inserting that data to an InfluxDB database
 #  Version:     07
 #  Author:      Jonas Werner
@@ -24,16 +24,16 @@ from influxdb import InfluxDBClient
 from requests.auth import HTTPBasicAuth
 
 # Set environment variables
-idrac           = "192.168.0.120" # If certificate is used an FQDN is required rather than the IP
+idrac           = "10.121.9.999" # If certificate is used an FQDN is required rather than the IP
 idracUser       = "root"
 idracPass       = "calvin"
-influxDBHost    = os.environ['influxDBHost']
-influxDBPort    = os.environ['influxDBPort']
-influxDBUser    = os.environ['influxDBUser']
-influxDBPass    = os.environ['influxDBPass']
-influxDBName    = os.environ['influxDBName']
-device          = "mitaR740"    # Description of the telemetry data source
-location        = "Mita CSC"    # Description of the location the device is located in
+influxDBHost    = "192.168.130.139"
+influxDBPort    = "8086"
+influxDBUser    = "admin"
+influxDBPass    = "supersecretpassword"
+influxDBName    = "telemetry"
+device          = "device-r740"    # Description of the telemetry data source
+location        = "beijing"    # Description of the location the device is located in
 
 
 
@@ -44,17 +44,19 @@ def influxDBconnect():
 
 def influxDBwrite(device, location, sensorName, sensorValue):
     timestamp = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+    # print(device, location, sensorName, sensorValue)
 
     measurementData = [
         {
-            "measurement": device,
+            "measurement": "test",
             "tags": {
-                "device": device,
-                "location": location
+                "device": "device-r740",
+                "location": "beijing"
             },
             "time": timestamp,
             "fields": {
-                sensorName: sensorValue
+                "sensorName": sensorName,
+                "sensorValue": sensorValue
             }
         }
     ]
@@ -89,18 +91,17 @@ for line in r.iter_lines():
             print("Report sequence number: %s ##########################################" % seqNum)
 
             for entry in readings:
-                # print("%s" % entry)
+                print("%s" % entry)
                 label = entry['Oem']['Dell']['Label']
                 value = entry['MetricValue']
 
-                if "CPU1" in label:
+                if "CPU1" in label and label.strip():
                     label = "CPU1_Core%s" % cpuOneCore
                     cpuOneCore += 1
-                if "CPU2" in label:
+                if "CPU2" in label and label.strip():
                     label = "CPU2_Core%s" % cpuTwoCore
                     cpuTwoCore += 1
 
                 print("%s: %s" % (label, value))
 
                 influxDBwrite(device, location, label, value)
-
