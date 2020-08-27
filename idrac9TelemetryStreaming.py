@@ -24,9 +24,9 @@ from influxdb import InfluxDBClient
 from requests.auth import HTTPBasicAuth
 
 # Set environment variables
-idrac           = "10.121.2.141" # If certificate is used an FQDN is required rather than the IP
+idrac           = "10.121.9.999" # If certificate is used an FQDN is required rather than the IP
 idracUser       = "root"
-idracPass       = "mycalvin"
+idracPass       = "calvin"
 influxDBHost    = "192.168.130.139"
 influxDBPort    = "8086"
 influxDBUser    = "admin"
