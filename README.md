@@ -1,12 +1,8 @@
 # idrac9-telemetry-streaming
-Script for pulling Redfish SSE telemetry stream from 14G server and saving into an InfluxDB
+Python scripting for Dell EMC PowerEdge iDRAC Telemetry
 
-# Environment
-Environment variables for the InfluxDB are set prior to running the script. The script can also be modified to hold these varilables directly. 
+![Screen Shot 2020-08-27 at 4 03 06 PM](https://user-images.githubusercontent.com/16042528/91416080-7899ec00-e881-11ea-95ec-5c1711cc5b4f.png)
 
-# Example of setting required variables:
-- export influxDBHost="10.6.28.31"
-- export influxDBPort="8086"
-- export influxDBUser="root"
-- export influxDBPass="pass"
-- export influxDBName="telemetry"
+Contributors
+-------------------
+* XinYe (nunchuk@live.com)
