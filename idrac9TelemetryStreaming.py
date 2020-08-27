@@ -24,9 +24,9 @@ from influxdb import InfluxDBClient
 from requests.auth import HTTPBasicAuth
 
 # Set environment variables
-idrac           = "10.121.9.999" # If certificate is used an FQDN is required rather than the IP
+idrac           = "10.121.2.141" # If certificate is used an FQDN is required rather than the IP
 idracUser       = "root"
-idracPass       = "calvin"
+idracPass       = "mycalvin"
 influxDBHost    = "192.168.130.139"
 influxDBPort    = "8086"
 influxDBUser    = "admin"
@@ -48,14 +48,14 @@ def influxDBwrite(device, location, sensorName, sensorValue):
 
     measurementData = [
         {
-            "measurement": "test",
+            "measurement": "test01",
             "tags": {
-                "device": "device-r740",
-                "location": "beijing"
+                "host": "r740",
+                "location": "beijing",
+                "sensorName": sensorName
             },
             "time": timestamp,
             "fields": {
-                "sensorName": sensorName,
                 "sensorValue": sensorValue
             }
         }
@@ -91,6 +91,7 @@ for line in r.iter_lines():
             print("Report sequence number: %s ##########################################" % seqNum)
 
             for entry in readings:
+
                 print("%s" % entry)
                 label = entry['Oem']['Dell']['Label']
                 value = entry['MetricValue']
@@ -101,6 +102,8 @@ for line in r.iter_lines():
                 if "CPU2" in label and label.strip():
                     label = "CPU2_Core%s" % cpuTwoCore
                     cpuTwoCore += 1
+                if value is None:
+                    value = "None"
 
                 print("%s: %s" % (label, value))
 
